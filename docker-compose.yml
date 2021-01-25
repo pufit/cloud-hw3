@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  search:
+    build:
+      dockerfile: docker/search.dockerfile
+      context: .
+    image: hw3_search:latest
