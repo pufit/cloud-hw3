@@ -6,3 +6,11 @@ services:
       dockerfile: docker/search.dockerfile
       context: .
     image: hw3_search:latest
+
+  integration_tests:
+    image: hw3_search:latest
+    entrypoint: pytest -vs src/tests/
+    volumes:
+      - ./src/tests:/search_app/src/tests
+    depends_on:
+      - search
