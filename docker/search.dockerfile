@@ -5,6 +5,7 @@ WORKDIR /search_app/
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+COPY .coveragerc .coveragerc
 
 COPY data data
 COPY src src
