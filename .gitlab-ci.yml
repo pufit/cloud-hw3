@@ -25,6 +25,7 @@ unit_tests:
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE/hw3_search:latest
+    - docker tag $CI_REGISTRY_IMAGE/hw3_search:latest hw3_search:latest
     - docker-compose run unit_test_search
 
 
@@ -33,6 +34,7 @@ integration_tests:
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE/hw3_search:latest
+    - docker tag $CI_REGISTRY_IMAGE/hw3_search:latest hw3_search:latest
     - docker-compose up -d search
     - docker-compose run integration_tests
     - docker-compose down
