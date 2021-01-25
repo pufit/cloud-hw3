@@ -12,9 +12,11 @@
 
 ## Как скачать и протестировать
 
+**Перед установкой убедитесь, что у вас установлен Git LFS: https://git-lfs.github.com**
+
 Скачаем репозиторий и соберем всё необходимое:
 ```
-git clone git@gitlab.com:NanoBjorn/hse-distsys-http-hw-2020.git
+git clone git@gitlab.com:NanoBjorn/hse-distsys-http-hw-2020.git  # эта команда так же должна скачать данные в папку data, если на компьютере установлен git lfs
 cd hse-distsys-http-hw-2020
 docker-compose build
 ```
