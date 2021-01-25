@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.common.data_source import AbstractDataSource
-from src.search.service import SimpleSearchService, SearchInShardsService
+from common.data_source import AbstractDataSource
+from search.service import SimpleSearchService, SearchInShardsService
 
 
 @pytest.fixture

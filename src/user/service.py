@@ -1,4 +1,4 @@
-from src.common.data_source import AbstractDataSource
+from common.data_source import AbstractDataSource
 
 
 class UserService:

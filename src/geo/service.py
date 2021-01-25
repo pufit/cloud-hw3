@@ -2,7 +2,7 @@ import ipaddress as ip
 
 import pandas as pd
 
-from src.common.data_source import CSV
+from common.data_source import CSV
 
 
 class GeoService:

@@ -1,7 +1,7 @@
 import pytest
 
-from src.common.data_source import AbstractDataSource
-from src.user.service import UserService
+from common.data_source import AbstractDataSource
+from user.service import UserService
 
 
 @pytest.fixture

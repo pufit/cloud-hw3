@@ -1,8 +1,8 @@
 from typing import List, Dict
 
-from src.geo.service import GeoService
-from src.search.service import BaseSearchService
-from src.user.service import UserService
+from geo.service import GeoService
+from search.service import BaseSearchService
+from user.service import UserService
 
 
 class MetaSearchService:

@@ -3,7 +3,7 @@ from typing import List
 
 import pandas as pd
 
-from src.common.data_source import AbstractDataSource
+from common.data_source import AbstractDataSource
 
 
 def stupid_count_tokens(tokens, text):
@@ -15,7 +15,7 @@ def stupid_count_tokens(tokens, text):
 
 
 class BaseSearchService:
-    DOCS_COLUMNS = ['document', 'key']
+    DOCS_COLUMNS = ['document', 'key', 'key_md5']
 
     @abstractmethod
     def get_search_data(self, search_text, user_data=None, geo_data=None, limit=10) -> pd.DataFrame:
@@ -36,27 +36,31 @@ class SimpleSearchService(BaseSearchService):
         return res
 
     def _get_geo_mask(self, geo_data=None):
-        return self._data['region'] == geo_data.get('region')
+        gd = geo_data.get('region') if geo_data is not None else None
+        return self._data['region'] == gd
 
     def _get_gender_mask(self, user_data=None):
-        return self._data['gender'].apply(lambda x: stupid_count_tokens([user_data.get('gender', 'null')], x))
+        ud = user_data.get('gender', 'null') if user_data is not None else 'non-existing gender'
+        return self._data['gender'].apply(lambda x: stupid_count_tokens([ud], x))
 
     def _get_age_mask(self, user_data=None):
         user_age = int(user_data['age']) if user_data is not None else -1
         return self._data.apply(lambda x: x['age_from'] <= user_age <= x['age_to'], axis=1)
 
-    def _sort_by_rating_and_tokens(self, rating, tokens_count):
-        df = pd.concat([tokens_count, rating], axis=1)
-        return df.sort_values([0, 1], ascending=[False, False])
+    def _sort_by_rating_and_tokens(self, rating, tokens_count, key_md5):
+        df = pd.concat([tokens_count, rating, key_md5], axis=1)
+        return df.sort_values([0, 1, 'key_md5'], ascending=[False, False, False])
 
     def get_search_data(self, search_text, user_data=None, geo_data=None, limit=10) -> pd.DataFrame:
         # this is some simple algorithm that came to my mind, does not need to be useful or good, just something working
+        if search_text is None or search_text == '':
+            return pd.DataFrame([], columns=self.DOCS_COLUMNS)
         tokens_count = self._build_tokens_count(search_text)
         geo_mask = self._get_geo_mask(geo_data)
         gender_mask = self._get_gender_mask(user_data)
         age_mask = self._get_age_mask(user_data)
         rating = geo_mask + gender_mask + age_mask
-        df = self._sort_by_rating_and_tokens(rating, tokens_count)
+        df = self._sort_by_rating_and_tokens(rating, tokens_count, self._data['key_md5'])
         return self._data.loc[df.head(limit).index]
 
 
@@ -66,8 +70,9 @@ class SearchInShardsService(SimpleSearchService):
 
     def get_search_data(self, *args, **kwargs) -> pd.DataFrame:
         shards_responses = []
-        for i, shard in enumerate(self._shards):
+        for shard in self._shards:
             shards_responses.append(shard.get_search_data(*args, **kwargs))
-            shards_responses[-1].index += 10 ** i
         self._data = pd.concat(shards_responses)  # possible data race in case of multi thread/async usage
+        self._data.reset_index(inplace=True, drop=True)
+        assert self._data.index.is_unique
         return super().get_search_data(*args, **kwargs)

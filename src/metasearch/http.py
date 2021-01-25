@@ -1,6 +1,6 @@
 from flask import Flask, request
 
-from src.metasearch.service import MetaSearchService
+from metasearch.service import MetaSearchService
 
 
 class Server(Flask):
@@ -20,7 +20,8 @@ class Server(Flask):
         ip = request.args.get('ip_addr')
         if ip is None:
             ip = request.remote_addr
-        return self._metasearch.search(text, user_id, ip)
+        sr = self._metasearch.search(text, user_id, ip)
+        return {'search_results': sr}
 
     def run_server(self, **kwargs):
         super().run(host='0.0.0.0', port=8000, **kwargs)

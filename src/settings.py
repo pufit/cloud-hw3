@@ -12,4 +12,4 @@ def datafile(file):
 USER_DATA_FILE = datafile('users.csv')
 GEO_DATA_FILE = datafile('geo.csv')
 REQUESTS_DATA_FILE = ''
-SEARCH_DOCUMENTS_DATA_FILES = [datafile(f'news_shard_{i}.csv') for i in range(1, 4)]
+SEARCH_DOCUMENTS_DATA_FILES = [datafile(f'news_generated.{i}.csv') for i in range(1, 4)]

@@ -1,10 +1,10 @@
-from src.common.data_source import CSV
-from src.geo.service import GeoService
-from src.metasearch.http import Server
-from src.metasearch.service import MetaSearchService
-from src.search.service import SearchInShardsService, SimpleSearchService
-from src.settings import USER_DATA_FILE, GEO_DATA_FILE, SEARCH_DOCUMENTS_DATA_FILES
-from src.user.service import UserService
+from common.data_source import CSV
+from geo.service import GeoService
+from metasearch.http import Server
+from metasearch.service import MetaSearchService
+from search.service import SearchInShardsService, SimpleSearchService
+from settings import USER_DATA_FILE, GEO_DATA_FILE, SEARCH_DOCUMENTS_DATA_FILES
+from user.service import UserService
 
 
 def main():
@@ -13,7 +13,7 @@ def main():
     search = SearchInShardsService(shards=[SimpleSearchService(CSV(file)) for file in SEARCH_DOCUMENTS_DATA_FILES])
     metasearch = MetaSearchService(search, user_service, geo_service)
     server = Server('metasearch', metasearch=metasearch)
-    server.run_server()
+    server.run_server(debug=True)
 
 
 if __name__ == '__main__':
