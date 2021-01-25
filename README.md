@@ -23,7 +23,7 @@ docker-compose build
 
 Теперь можно запустить интеграционные тесты, которые дождутся работающего поиска и сделают туда всего один запрос:
 ```
-docker-compose up -d server
+docker-compose up -d search
 docker-compose run integration_tests
 ```
 
