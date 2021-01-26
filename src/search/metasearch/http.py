@@ -16,7 +16,7 @@ class Server(Flask):
 
     def search(self):
         text = request.args.get('text')
-        user_id = request.args.get('user_id')
+        user_id = int(request.args.get('user_id'))
         ip = request.args.get('ip_addr')
         if ip is None:
             ip = request.remote_addr
