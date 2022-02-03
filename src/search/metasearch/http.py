@@ -17,10 +17,7 @@ class Server(Flask):
     def search(self):
         text = request.args.get('text')
         user_id = int(request.args.get('user_id'))
-        ip = request.args.get('ip_addr')
-        if ip is None:
-            ip = request.remote_addr
-        sr = self._metasearch.search(text, user_id, ip)
+        sr = self._metasearch.search(text, user_id)
         return {'search_results': sr}
 
     def run_server(self, **kwargs):
