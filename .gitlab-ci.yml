@@ -21,15 +21,6 @@ build:
     - docker push $CI_REGISTRY_IMAGE/hw3_search:latest
 
 
-unit_tests:
-  stage: test
-  script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker pull $CI_REGISTRY_IMAGE/hw3_search:latest
-    - docker tag $CI_REGISTRY_IMAGE/hw3_search:latest hw3_search:latest
-    - docker-compose run unit_test_search
-
-
 integration_tests:
   stage: test
   script:
