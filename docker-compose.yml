@@ -1,16 +1,54 @@
 version: '3.3'
 
 services:
-  search:
-    build:
-      dockerfile: docker/search.dockerfile
-      context: .
-    image: hw3_search:latest
 
-  integration_tests:
-    image: hw3_search:latest
-    entrypoint: pytest -vs src/tests/
-#    volumes:
-#      - ./src/tests:/search_app/src/tests
+  basesearch1:
+    build:
+      dockerfile: docker/basesearch.dockerfile
+      args:
+        - BASE_SEARCH_DATA_PATH=data/news_generated.1.csv
+        - PORT=8001
+    ports:
+      - "8001:8001"
+
+  basesearch2:
+    build:
+      dockerfile: docker/basesearch.dockerfile
+      args:
+        - BASE_SEARCH_DATA_PATH=data/news_generated.2.csv
+        - PORT=8002
+    ports:
+      - "8002:8002"
+
+  users:
+    build:
+      dockerfile: docker/users.dockerfile
+      args:
+        - USERS_DATA_PATH=data/users.csv
+    ports:
+      - "7999:7999"
+
+  intsearch:
+    build:
+      dockerfile: docker/intsearch.dockerfile
+      args:
+        - INT_BASE_SEARCH_ENDPOINTS=http://basesearch1:8001/,http://basesearch2:8002/
+    ports:
+      - "8100:8100"
     depends_on:
-      - search
+      - basesearch1
+      - basesearch2
+
+  metasearch:
+    image: hw3_metasearch:latest
+    build:
+      dockerfile: docker/metasearch.dockerfile
+      args:
+        - META_INT_SEARCH_ENDPOINTS=http://intsearch:8100/
+        - META_USERS_ENDPOINTS=http://users:7999/
+    ports:
+      - "8200:8200"
+
+    depends_on:
+      - intsearch
+      - users

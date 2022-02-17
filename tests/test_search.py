@@ -30,7 +30,7 @@ def test_search_service(search_baseurl):
     url = f'{search_baseurl}/{path}?{params}'
     response = requests.get(url)
     expected = {
-        "search_results": [
+        "documents": [
             {
               "document": " VALKENBURG, Netherlands (Reuters) - The European Union will  draw up sanctions against Sudan, with a view to implementing  them if the United Nations calls for such measures, the Dutch  foreign minister said on Saturday.",
               "key": "EU to Draft Sanctions Against Sudan",
